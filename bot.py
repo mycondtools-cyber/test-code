@@ -53,18 +53,18 @@ ENCLOSURE = 3
 
 # Order of supplemental questions that never appear on a nameplate.
 SUPPLEMENTAL_QUESTIONS: list[tuple[str, str]] = [
-    ("bon_de_travail", "Номер бону (наприклад A 31703)"),
-    ("date_j", "Дата прийому — день (DD)"),
-    ("date_m", "Місяць (MM)"),
-    ("date_a", "Рік (YY)"),
-    ("client", "Клієнт (CLIENT)"),
-    ("req", "REQ"),
-    ("po", "PO"),
-    ("tag", "TAG"),
-    ("spec", "SPEC"),
-    ("special", "SPECIAL (особливі примітки, або '-' якщо немає)"),
-    ("autorise_par", "Autorise par (підпис / ім'я)"),
-    ("exigence", "EXIGENCE DU CLIENT (наприклад 'Estimation')"),
+    ("bon_de_travail", "Введіть номер бону (наприклад A 31703):"),
+    ("date_j", "Введіть день прийому (DD):"),
+    ("date_m", "Введіть місяць (MM):"),
+    ("date_a", "Введіть рік (YY):"),
+    ("client", "Введіть ім'я клієнта (CLIENT):"),
+    ("req", "Введіть REQ:"),
+    ("po", "Введіть PO:"),
+    ("tag", "Введіть TAG:"),
+    ("spec", "Введіть SPEC:"),
+    ("special", "Введіть SPECIAL (особливі примітки, або '-' якщо немає):"),
+    ("autorise_par", "Введіть autorise par (підпис / ім'я):"),
+    ("exigence", "Введіть EXIGENCE DU CLIENT (наприклад 'Estimation'):"),
 ]
 
 
