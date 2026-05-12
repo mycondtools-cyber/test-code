@@ -12,7 +12,19 @@ from pathlib import Path
 
 from reportlab.lib.colors import Color, black
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
+
+# Register a Unicode font with Cyrillic + Latin glyphs. Helvetica (the default
+# in ReportLab) only ships with WinAnsi, so any cyrillic typed by the operator
+# would render as filled black squares. DejaVu Sans ships in the repo so the
+# fonts are available identically on any host (Railway, local, etc).
+_FONT_DIR = Path(__file__).parent / "fonts"
+pdfmetrics.registerFont(TTFont("DejaVu", str(_FONT_DIR / "DejaVuSans.ttf")))
+pdfmetrics.registerFont(TTFont("DejaVu-Bold", str(_FONT_DIR / "DejaVuSans-Bold.ttf")))
+FONT_REG = "DejaVu"
+FONT_BOLD = "DejaVu-Bold"
 
 # Same dark red as the printed labels.
 LABEL = Color(0.55, 0.10, 0.13)
@@ -108,7 +120,7 @@ def _box(c: canvas.Canvas, x: float, y: float, w: float, h: float) -> None:
 
 def _label(c: canvas.Canvas, x: float, y: float, text: str, size: float = 6.5) -> None:
     c.setFillColor(LABEL)
-    c.setFont("Helvetica-Bold", size)
+    c.setFont(FONT_BOLD, size)
     c.drawString(x, y, text)
 
 
@@ -116,7 +128,7 @@ def _value(c: canvas.Canvas, x: float, y: float, text: str, size: float = 9) -> 
     if not text:
         return
     c.setFillColor(black)
-    c.setFont("Helvetica", size)
+    c.setFont(FONT_REG, size)
     c.drawString(x, y, text)
 
 
@@ -132,7 +144,7 @@ def _checkbox(c: canvas.Canvas, x: float, y: float, checked: bool, size: float =
     c.rect(x, y, size, size, stroke=1, fill=0)
     if checked:
         c.setFillColor(black)
-        c.setFont("Helvetica-Bold", size + 2)
+        c.setFont(FONT_BOLD, size + 2)
         c.drawString(x + 0.8, y + 0.6, "X")
 
 
@@ -186,7 +198,7 @@ def _draw_header(c: canvas.Canvas, top: float, data: FormData) -> float:
     c.setLineWidth(1.2)
     c.circle(cx, cy, 17, stroke=1, fill=0)
     c.setFillColor(LABEL)
-    c.setFont("Helvetica-Bold", 11)
+    c.setFont(FONT_BOLD, 11)
     c.drawCentredString(cx, cy - 3.5, "ZURITT")
     # subtle globe meridian
     c.setLineWidth(0.4)
@@ -229,7 +241,7 @@ def _draw_header(c: canvas.Canvas, top: float, data: FormData) -> float:
     _label(c, bdtv_x, y + 28, "N°", 12)
     _label(c, bdtv_x + 14, y + 28, "BON DE TRAVAIL", 9)
     c.setFillColor(LABEL)
-    c.setFont("Helvetica-Bold", 22)
+    c.setFont(FONT_BOLD, 22)
     c.drawString(bdtv_x + 6, y + 6, data.bon_de_travail or "")
 
     return y
@@ -247,7 +259,7 @@ def _draw_id_block(c: canvas.Canvas, top: float, data: FormData) -> float:
     def field(row: int, x: float, label: str, w: float, value: str, label_size: float = 7) -> None:
         y = top - row * row_h
         _label(c, x, y - 9, label, label_size)
-        lw = c.stringWidth(label, "Helvetica-Bold", label_size)
+        lw = c.stringWidth(label, FONT_BOLD, label_size)
         ux = x + lw + 4
         uw = w - (lw + 4)
         _underline(c, ux, y - 11, uw)
@@ -344,7 +356,7 @@ def _draw_pieces_box(c: canvas.Canvas, top: float, data: FormData) -> float:
     if data.pieces:
         text = c.beginText(M + 4, top - 22)
         text.setFillColor(black)
-        text.setFont("Helvetica", 9)
+        text.setFont(FONT_REG, 9)
         for line in data.pieces.splitlines():
             text.textLine(line)
         c.drawText(text)
@@ -457,7 +469,7 @@ def _draw_test_blocks(c: canvas.Canvas, top: float) -> float:
         c.setFillColor(LABEL)
         c.rect(x, top - 18, w, 18, stroke=0, fill=1)
         c.setFillColor(Color(1, 1, 1))
-        c.setFont("Helvetica-Bold", 10)
+        c.setFont(FONT_BOLD, 10)
         c.drawCentredString(x + w / 2, top - 13, text)
 
     header(M, col1, "TEST A L'ARRIVEE")
